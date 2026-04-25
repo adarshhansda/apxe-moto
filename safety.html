@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX MOTO — Safety</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:      #0a0a0a;
+  --black2:     #111111;
+  --black3:     #1a1a1a;
+  --gray-dark:  #2a2a2a;
+  --gray-mid:   #555;
+  --gray-light: #999;
+  --gray-text:  #c8c8c8;
+  --white:      #f0f0f0;
+  --red:        #e8001e;
+  --red-glow:   rgba(232,0,30,0.25);
+  --blue:       #0066ff;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-cond:    'Barlow Condensed', sans-serif;
+  --font-body:    'Barlow', sans-serif;
+  --nav-h: 72px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--black);
+  color: var(--gray-text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+#cursor {
+  position: fixed; top: 0; left: 0;
+  width: 12px; height: 12px;
+  background: var(--red);
+  border-radius: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s var(--ease), height 0.2s var(--ease);
+}
+#cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(232,0,30,0.5);
+  border-radius: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.12s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease);
+}
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 6px; height: 6px; }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 54px; height: 54px; border-color: var(--red); }
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+img { display: block; max-width: 100%; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* NAVIGATION */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 1000;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-inner { height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; }
+.logo {
+  font-family: var(--font-display); font-size: 1.75rem;
+  letter-spacing: 0.12em; color: var(--white);
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.logo span { color: var(--red); }
+.logo-icon {
+  width: 32px; height: 32px;
+  border: 2px solid var(--red); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.logo-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-family: var(--font-cond); font-size: 0.85rem;
+  font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gray-light);
+  position: relative; transition: color 0.25s;
+  text-decoration: none;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--red);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.active { color: var(--white); }
+.nav-links a.active::after { transform: scaleX(1); }
+.nav-links .divider { color: var(--gray-dark); margin: 0; pointer-events: none; }
+
+.nav-cta {
+  font-family: var(--font-cond); font-size: 0.8rem;
+  font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; padding: 10px 22px;
+  border: 1px solid var(--red); color: var(--white);
+  background: transparent; cursor: pointer;
+  text-decoration: none;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  position: relative; overflow: hidden;
+}
+.nav-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--red); transform: translateX(-101%);
+  transition: transform 0.3s var(--ease); z-index: -1;
+}
+.nav-cta:hover::before { transform: translateX(0); }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 26px; height: 2px; background: var(--white); transition: transform 0.3s, opacity 0.3s; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
+  background: rgba(10,10,10,0.97); backdrop-filter: blur(20px);
+  z-index: 999; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.5rem; opacity: 0; pointer-events: none;
+  transition: opacity 0.35s var(--ease);
+}
+.mobile-menu.open { opacity: 1; pointer-events: auto; }
+.mobile-menu a {
+  font-family: var(--font-display); font-size: 3rem;
+  letter-spacing: 0.1em; color: var(--white);
+  transition: color 0.2s; text-decoration: none;
+}
+.mobile-menu a:hover { color: var(--red); }
+
+/* PAGE HEADER */
+.page-header {
+  padding: 8rem 0 4rem; text-align: center;
+  background: var(--black2);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.section-label {
+  font-family: var(--font-cond); font-size: 0.75rem;
+  font-weight: 600; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--red);
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1rem; justify-content: center;
+}
+.section-label::before { content: ''; width: 28px; height: 1px; background: var(--red); }
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 0.95; letter-spacing: 0.04em;
+  color: var(--white); margin-bottom: 1rem;
+}
+.page-header p { font-size: 1rem; line-height: 1.8; color: var(--gray-mid); max-width: 600px; margin: 0 auto; }
+
+/* SAFETY GRID */
+.safety-grid-full {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1.5px; padding: 3rem 0;
+  background: rgba(255,255,255,0.04);
+}
+.safety-card {
+  background: var(--black); padding: 2.5rem 2rem;
+  text-align: center; transition: background 0.3s, transform 0.3s;
+  position: relative; overflow: hidden;
+}
+.safety-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: var(--red);
+  transform: scaleX(0); transform-origin: center;
+  transition: transform 0.4s var(--ease);
+}
+.safety-card:hover { background: var(--black3); transform: translateY(-4px); }
+.safety-card:hover::after { transform: scaleX(1); }
+.safety-card-icon {
+  width: 48px; height: 48px; margin: 0 auto 1.25rem;
+  background: rgba(232,0,30,0.1);
+  border: 1px solid rgba(232,0,30,0.3);
+  display: flex; align-items: center; justify-content: center;
+}
+.safety-card-icon img {
+  width: 24px; height: 24px; object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(12%) sepia(98%) saturate(7470%) hue-rotate(350deg) brightness(95%) contrast(110%);
+}
+.safety-card h3 {
+  font-family: var(--font-cond); font-size: 0.95rem;
+  font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--white);
+  margin-bottom: 0.75rem;
+}
+.safety-card p { font-size: 0.85rem; line-height: 1.7; color: var(--gray-mid); }
+.safety-standard {
+  display: inline-block; margin-top: 1rem;
+  padding: 4px 12px;
+  background: rgba(232,0,30,0.1);
+  border: 1px solid rgba(232,0,30,0.3);
+  font-family: var(--font-cond); font-size: 0.7rem;
+  font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--red);
+}
+
+/* FEATURED SAFETY */
+.featured-safety {
+  padding: 6rem 0; background: var(--black2);
+  text-align: center;
+}
+.safety-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 2rem; max-width: 900px; margin: 3rem auto 0;
+}
+.safety-stat {
+  text-align: center;
+}
+.safety-stat-num {
+  font-family: var(--font-display); font-size: 3.5rem;
+  color: var(--red); line-height: 1;
+  letter-spacing: 0.05em;
+}
+.safety-stat-lbl {
+  font-family: var(--font-cond); font-size: 0.8rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--white); margin-top: 0.5rem;
+}
+.safety-stat-desc {
+  font-size: 0.8rem; color: var(--gray-mid);
+  margin-top: 0.25rem;
+}
+
+/* CTA */
+.safety-cta {
+  padding: 5rem 2rem; text-align: center;
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.safety-cta h3 {
+  font-family: var(--font-display); font-size: 2.5rem;
+  color: var(--white); letter-spacing: 0.04em; margin-bottom: 2rem;
+}
+.btn-primary {
+  font-family: var(--font-cond); font-size: 0.85rem;
+  font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; padding: 16px 36px;
+  background: var(--red); color: var(--white);
+  border: none; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px var(--red-glow); }
+
+/* FOOTER */
+footer {
+  background: var(--black); border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 5rem 2rem 2.5rem;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; max-width: 1280px; margin: 0 auto; }
+.footer-brand .logo { margin-bottom: 1.25rem; font-size: 1.5rem; }
+.footer-tagline { font-size: 0.85rem; line-height: 1.7; color: var(--gray-mid); max-width: 260px; margin-bottom: 1.75rem; }
+.social-links { display: flex; gap: 10px; }
+.social-link {
+  width: 36px; height: 36px; border: 1px solid var(--gray-dark);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-mid); transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+.social-link:hover { border-color: var(--red); color: var(--white); background: rgba(232,0,30,0.1); }
+.social-link img { width: 15px; height: 15px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.6; }
+.social-link:hover img { opacity: 1; }
+.footer-heading {
+  font-family: var(--font-cond); font-size: 0.72rem;
+  font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--white); margin-bottom: 1.5rem;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-links a { font-size: 0.85rem; color: var(--gray-mid); transition: color 0.2s; text-decoration: none; }
+.footer-links a:hover { color: var(--white); }
+.footer-contact { display: flex; flex-direction: column; gap: 0.7rem; }
+.contact-item { font-size: 0.82rem; color: var(--gray-mid); display: flex; align-items: flex-start; gap: 8px; }
+.contact-item img { width: 14px; height: 14px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.5; flex-shrink: 0; margin-top: 2px; }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 2rem; margin-top: 4rem;
+  max-width: 1280px; margin-left: auto; margin-right: auto;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-copy { font-size: 0.78rem; color: var(--gray-mid); }
+.footer-legal { display: flex; gap: 1.5rem; }
+.footer-legal a { font-size: 0.78rem; color: var(--gray-mid); transition: color 0.2s; text-decoration: none; }
+.footer-legal a:hover { color: var(--white); }
+
+#progress-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--red);
+  transform-origin: left; transform: scaleX(0);
+  z-index: 1001; transition: transform 0.1s linear;
+}
+#back-top {
+  position: fixed; bottom: 2rem; right: 2rem;
+  width: 44px; height: 44px;
+  background: var(--red); border: none; cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 900;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+#back-top.visible { opacity: 1; pointer-events: auto; }
+#back-top:hover { transform: translateY(-3px); }
+#back-top img { width: 16px; height: 16px; object-fit: contain; filter: brightness(0) invert(1); }
+
+#loader {
+  position: fixed; inset: 0; background: var(--black);
+  z-index: 9999; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2rem;
+  transition: opacity 0.6s var(--ease), visibility 0.6s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-logo { font-family: var(--font-display); font-size: 2.5rem; letter-spacing: 0.2em; color: var(--white); }
+.loader-logo span { color: var(--red); }
+.loader-bar-wrap { width: 240px; height: 2px; background: var(--gray-dark); overflow: hidden; }
+.loader-bar { height: 100%; background: var(--red); animation: load 1.6s ease-out forwards; }
+@keyframes load { from{width:0} to{width:100%} }
+.loader-pct { font-family: var(--font-cond); font-size: 0.75rem; letter-spacing: 0.2em; color: var(--gray-mid); }
+
+@media (max-width: 1100px) { .safety-grid-full { grid-template-columns: repeat(2, 1fr); } .safety-stats { grid-template-columns: repeat(2, 1fr); } .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; } }
+@media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } .mobile-menu { display: flex; } .safety-grid-full { grid-template-columns: 1fr 1fr; } .footer-grid { grid-template-columns: 1fr; gap: 2rem; } }
+@media (max-width: 480px) { .safety-grid-full { grid-template-columns: 1fr; } .safety-stats { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">APEX<span>MOTO</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-pct" id="loader-pct">LOADING... 0%</div>
+</div>
+
+<div id="progress-bar"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <img src="https://img.icons8.com/ios-filled/50/FFFFFF/up--v1.png" alt="Back to top" width="16" height="16">
+</button>
+
+<!-- NAVIGATION -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><img src="324de0b751c300f7d9ca067d395275a6.png" alt="APEX Logo" width="20" height="20"></div>
+      APEX<span>MOTO</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="technology.html">Technology</a></li>
+      <li><a href="safety.html" class="active">Safety</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><span class="divider">|</span></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+    <a href="products.html" class="nav-cta">Shop Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="technology.html">Technology</a>
+  <a href="safety.html">Safety</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+  <a href="signup.html">Sign Up</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Safety First</div>
+    <h2 class="section-title">Built to Protect at Every Level</h2>
+    <p>Our safety philosophy: protect against the crash you don't expect. Every APEX helmet exceeds global standards before it reaches your hands.</p>
+  </div>
+</div>
+
+<!-- SAFETY GRID -->
+<div class="container">
+  <div class="safety-grid-full">
+    <div class="safety-card">
+      <div class="safety-card-icon"><img src="https://img.icons8.com/ios-filled/50/e8001e/europe.png" alt="ECE" width="24" height="24"></div>
+      <h3>ECE 22.06</h3>
+      <p>Latest European safety standard with rigorous impact, penetration, and retention testing requirements.</p>
+      <span class="safety-standard">Certified</span>
+    </div>
+    <div class="safety-card">
+      <div class="safety-card-icon"><img src="https://img.icons8.com/ios-filled/50/e8001e/usa.png" alt="DOT" width="24" height="24"></div>
+      <h3>DOT FMVSS 218</h3>
+      <p>US Department of Transportation approved for all 50 states with extensive impact attenuation testing.</p>
+      <span class="safety-standard">Certified</span>
+    </div>
+    <div class="safety-card">
+      <div class="safety-card-icon"><img src="https://img.icons8.com/ios-filled/50/e8001e/star.png" alt="SNELL" width="24" height="24"></div>
+      <h3>SNELL M2025</h3>
+      <p>Premium racing certification with multi-impact and penetration test requirements exceeding DOT standards.</p>
+      <span class="safety-standard">5-Star</span>
+    </div>
+    <div class="safety-card">
+      <div class="safety-card-icon"><img src="https://img.icons8.com/ios-filled/50/e8001e/star--v1.png" alt="SHARP" width="24" height="24"></div>
+      <h3>SHARP Rating</h3>
+      <p>UK government safety rating system — APEX helmets consistently achieve the highest 5-star rating.</p>
+      <span class="safety-standard">5-Star</span>
+    </div>
+    <div class="safety-card">
+      <div class="safety-card-icon"><img src="https://img.icons8.com/ios-filled/50/e8001e/pulse.png" alt="Impact" width="24" height="24"></div>
+      <h3>Impact Absorption</h3>
+      <p>96/100 SHARP laboratory impact score with multi-directional impact protection system (MIPS).</p>
+      <span class="safety-standard">96/100</span>
+    </div>
+    <div class="safety-card">
+      <div class="safety-card-icon"><img src="https://img.icons8.com/ios-filled/50/e8001e/ambulance.png" alt="Emergency" width="24" height="24"></div>
+      <h3>Emergency Release</h3>
+      <p>Quick-remove cheek pads enable safe helmet removal by first responders in just 1.2 seconds.</p>
+      <span class="safety-standard">1.2s</span>
+    </div>
+    <div class="safety-card">
+      <div class="safety-card-icon"><img src="https://img.icons8.com/ios-filled/50/e8001e/stack.png" alt="Layers" width="24" height="24"></div>
+      <h3>Layer Protection</h3>
+      <p>Three independent layers: outer carbon shell, EPS impact matrix, and comfort liner for maximum safety.</p>
+      <span class="safety-standard">3-Layer</span>
+    </div>
+    <div class="safety-card">
+      <div class="safety-card-icon"><img src="https://img.icons8.com/ios-filled/50/e8001e/globe--v1.png" alt="AS/NZS" width="24" height="24"></div>
+      <h3>AS/NZS 1698</h3>
+      <p>Australia/New Zealand safety standard certified for all APEX models sold in Oceania region.</p>
+      <span class="safety-standard">Certified</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED SAFETY STATS -->
+<div class="featured-safety">
+  <div class="container">
+    <div class="section-label">By The Numbers</div>
+    <h2 class="section-title">Safety That Speaks</h2>
+    <div class="safety-stats">
+      <div class="safety-stat">
+        <div class="safety-stat-num">5</div>
+        <div class="safety-stat-lbl">Certifications</div>
+        <div class="safety-stat-desc">Global standards met</div>
+      </div>
+      <div class="safety-stat">
+        <div class="safety-stat-num">96</div>
+        <div class="safety-stat-lbl">Impact Score</div>
+        <div class="safety-stat-desc">SHARP lab rating</div>
+      </div>
+      <div class="safety-stat">
+        <div class="safety-stat-num">1.2s</div>
+        <div class="safety-stat-lbl">Release Time</div>
+        <div class="safety-stat-desc">Emergency removal</div>
+      </div>
+      <div class="safety-stat">
+        <div class="safety-stat-num">3×</div>
+        <div class="safety-stat-lbl">Layer Protection</div>
+        <div class="safety-stat-desc">Independent shields</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="safety-cta">
+  <h3>Ride With Confidence</h3>
+  <a href="products.html" class="btn-primary">Shop Certified Helmets</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><img src="324de0b751c300f7d9ca067d395275a6.png" alt="APEX Logo" width="20" height="20"></div>
+        APEX<span>MOTO</span>
+      </a>
+      <p class="footer-tagline">Engineered for riders who refuse to compromise between safety and performance.</p>
+      <div class="social-links">
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/instagram-new.png" alt="Instagram" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/x.png" alt="X" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/youtube-play.png" alt="YouTube" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png" alt="Facebook" width="15" height="15"></a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Products</div>
+      <ul class="footer-links">
+        <li><a href="products.html">Sport Collection</a></li>
+        <li><a href="products.html">Touring Collection</a></li>
+        <li><a href="products.html">Off-Road Range</a></li>
+        <li><a href="#">Accessories</a></li>
+        <li><a href="#">Clearance</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <ul class="footer-links">
+        <li><a href="about.html">About APEX</a></li>
+        <li><a href="technology.html">Technology</a></li>
+        <li><a href="safety.html">Safety Standards</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Contact</div>
+      <div class="footer-contact">
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/marker.png" alt="Location" width="14" height="14"> 123 Velocity Drive, Los Angeles, CA 90015</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/phone.png" alt="Phone" width="14" height="14"> +1 (800) APEX-MOTO</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/email.png" alt="Email" width="14" height="14"> hello@apexmoto.com</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/clock.png" alt="Hours" width="14" height="14"> Mon–Fri 9am – 6pm PST</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 APEX MOTO. All rights reserved.</div>
+    <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Warranty</a></div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const loader = document.getElementById('loader');
+  const pct = document.getElementById('loader-pct');
+  let p = 0;
+  const interval = setInterval(() => {
+    p = Math.min(p + Math.random() * 18, 99);
+    pct.textContent = 'LOADING... ' + Math.round(p) + '%';
+  }, 120);
+  window.addEventListener('load', () => {
+    clearInterval(interval);
+    pct.textContent = 'LOADING... 100%';
+    setTimeout(() => loader.classList.add('hidden'), 400);
+  });
+  setTimeout(() => loader.classList.add('hidden'), 2200);
+})();
+
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let cx = 0, cy = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px'; });
+function animRing() { rx += (cx - rx) * 0.14; ry += (cy - ry) * 0.14; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
+animRing();
+
+const progressBar = document.getElementById('progress-bar');
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.transform = `scaleX(${docH > 0 ? scrolled / docH : 0})`;
+  backTop.classList.toggle('visible', scrolled > 400);
+});
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
+</script>
+</body>
+</html>

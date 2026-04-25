@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX MOTO — Products</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   APEX MOTO — PREMIUM HELMET BRAND WEBSITE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:      #0a0a0a;
+  --black2:     #111111;
+  --black3:     #1a1a1a;
+  --gray-dark:  #2a2a2a;
+  --gray-mid:   #555;
+  --gray-light: #999;
+  --gray-text:  #c8c8c8;
+  --white:      #f0f0f0;
+  --red:        #e8001e;
+  --red-glow:   rgba(232,0,30,0.25);
+  --blue:       #0066ff;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-cond:    'Barlow Condensed', sans-serif;
+  --font-body:    'Barlow', sans-serif;
+  --nav-h: 72px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--black);
+  color: var(--gray-text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+#cursor {
+  position: fixed; top: 0; left: 0;
+  width: 12px; height: 12px;
+  background: var(--red);
+  border-radius: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s var(--ease), height 0.2s var(--ease);
+}
+#cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(232,0,30,0.5);
+  border-radius: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.12s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease);
+}
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 6px; height: 6px; }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 54px; height: 54px; border-color: var(--red); }
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+img { display: block; max-width: 100%; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* NAVIGATION */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 1000;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-inner {
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.logo span { color: var(--red); }
+.logo-icon {
+  width: 32px; height: 32px;
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.logo-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+.nav-links {
+  display: flex; align-items: center; gap: 2.5rem;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-cond);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray-light);
+  position: relative;
+  transition: color 0.25s;
+  text-decoration: none;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--red);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.active { color: var(--white); }
+.nav-links a.active::after { transform: scaleX(1); }
+.nav-links .divider { color: var(--gray-dark); margin: 0; pointer-events: none; }
+
+.nav-cta {
+  font-family: var(--font-cond);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  border: 1px solid var(--red);
+  color: var(--white);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  position: relative; overflow: hidden;
+}
+.nav-cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--red);
+  transform: translateX(-101%);
+  transition: transform 0.3s var(--ease);
+  z-index: -1;
+}
+.nav-cta:hover::before { transform: translateX(0); }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 26px; height: 2px; background: var(--white); transition: transform 0.3s, opacity 0.3s; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
+  background: rgba(10,10,10,0.97);
+  backdrop-filter: blur(20px);
+  z-index: 999;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s var(--ease);
+}
+.mobile-menu.open { opacity: 1; pointer-events: auto; }
+.mobile-menu a {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.mobile-menu a:hover { color: var(--red); }
+
+/* PAGE HEADER */
+.page-header {
+  padding: 8rem 0 4rem;
+  text-align: center;
+  background: var(--black2);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.section-label {
+  font-family: var(--font-cond);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--red);
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+.section-label::before { content: ''; width: 28px; height: 1px; background: var(--red); }
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+.page-header p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--gray-mid);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* PRODUCTS */
+.products-grid-full {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  padding: 3rem 0;
+}
+.product-card {
+  background: var(--black3);
+  position: relative; overflow: hidden;
+  transition: transform 0.4s var(--ease);
+}
+.product-card:hover { transform: scale(1.01); z-index: 2; }
+.product-card-inner { padding: 2rem 1.5rem; }
+.product-img {
+  width: 100%; aspect-ratio: 4/3;
+  background: linear-gradient(135deg, var(--black3) 0%, #1e1e1e 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.product-img::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 80%, rgba(232,0,30,0.12) 0%, transparent 70%);
+  transition: opacity 0.4s;
+  z-index: 1;
+}
+.product-card:hover .product-img::before { opacity: 1.5; }
+.product-img img {
+  width: 90%; height: 90%;
+  object-fit: contain;
+  transition: transform 0.5s var(--ease), filter 0.4s;
+  position: relative; z-index: 0;
+}
+.product-card:hover .product-img img { transform: scale(1.08) rotate(-3deg); filter: drop-shadow(0 10px 30px rgba(232,0,30,0.3)); }
+.product-tag {
+  position: absolute; top: 12px; left: 12px;
+  font-family: var(--font-cond);
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 4px 10px;
+  background: var(--red); color: var(--white);
+  z-index: 2;
+}
+.product-tag.new { background: var(--blue); }
+.product-name {
+  font-family: var(--font-cond);
+  font-size: 1.1rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--white); margin-bottom: 4px;
+}
+.product-model { font-size: 0.8rem; color: var(--gray-mid); letter-spacing: 0.1em; margin-bottom: 1rem; }
+.product-bottom { display: flex; align-items: center; justify-content: space-between; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+.product-price { font-family: var(--font-display); font-size: 1.6rem; color: var(--white); letter-spacing: 0.05em; }
+.product-price sub { font-size: 0.9rem; font-family: var(--font-body); color: var(--gray-mid); vertical-align: middle; }
+.color-swatches { display: flex; gap: 6px; margin: 0.75rem 0; }
+.swatch { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid transparent; transition: border-color 0.2s, transform 0.2s; cursor: pointer; }
+.swatch:hover, .swatch.active { border-color: var(--white); transform: scale(1.2); }
+
+.filter-tabs { display: flex; gap: 0; margin: 2rem auto 3rem; border: 1px solid var(--gray-dark); width: fit-content; justify-content: center; }
+.filter-tab {
+  font-family: var(--font-cond); font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 10px 22px; cursor: pointer; color: var(--gray-mid);
+  background: none; border: none;
+  transition: color 0.2s, background 0.2s;
+}
+.filter-tab.active { background: var(--red); color: var(--white); }
+.filter-tab:hover:not(.active) { color: var(--white); background: rgba(255,255,255,0.05); }
+
+.cart-btn {
+  font-family: var(--font-cond);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+}
+.cart-btn:hover { background: #c5001a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,0,30,0.4); }
+.cart-btn.added { background: #00c853; }
+.qty-selector { display: flex; align-items: center; gap: 0; margin-top: 0.5rem; }
+.qty-btn {
+  width: 30px; height: 30px;
+  background: var(--black3);
+  border: 1px solid var(--gray-dark);
+  color: var(--white);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.qty-btn:hover { background: var(--gray-dark); }
+.qty-input {
+  width: 40px; height: 30px;
+  background: var(--black);
+  border: 1px solid var(--gray-dark);
+  color: var(--white);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+.cart-feedback {
+  font-size: 0.75rem;
+  color: #00c853;
+  margin-top: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.cart-feedback.show { opacity: 1; }
+
+/* FOOTER */
+footer {
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 5rem 2rem 2.5rem;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; max-width: 1280px; margin: 0 auto; }
+.footer-brand .logo { margin-bottom: 1.25rem; font-size: 1.5rem; }
+.footer-tagline { font-size: 0.85rem; line-height: 1.7; color: var(--gray-mid); max-width: 260px; margin-bottom: 1.75rem; }
+.social-links { display: flex; gap: 10px; }
+.social-link {
+  width: 36px; height: 36px;
+  border: 1px solid var(--gray-dark);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-mid); transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+.social-link:hover { border-color: var(--red); color: var(--white); background: rgba(232,0,30,0.1); }
+.social-link img { width: 15px; height: 15px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.6; }
+.social-link:hover img { opacity: 1; }
+.footer-heading {
+  font-family: var(--font-cond); font-size: 0.72rem;
+  font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--white); margin-bottom: 1.5rem;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-links a { font-size: 0.85rem; color: var(--gray-mid); transition: color 0.2s; text-decoration: none; }
+.footer-links a:hover { color: var(--white); }
+.footer-contact { display: flex; flex-direction: column; gap: 0.7rem; }
+.contact-item { font-size: 0.82rem; color: var(--gray-mid); display: flex; align-items: flex-start; gap: 8px; }
+.contact-item img { width: 14px; height: 14px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.5; flex-shrink: 0; margin-top: 2px; }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 2rem; margin-top: 4rem;
+  max-width: 1280px; margin-left: auto; margin-right: auto;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-copy { font-size: 0.78rem; color: var(--gray-mid); }
+.footer-legal { display: flex; gap: 1.5rem; }
+.footer-legal a { font-size: 0.78rem; color: var(--gray-mid); transition: color 0.2s; text-decoration: none; }
+.footer-legal a:hover { color: var(--white); }
+
+#progress-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--red);
+  transform-origin: left; transform: scaleX(0);
+  z-index: 1001; transition: transform 0.1s linear;
+}
+#back-top {
+  position: fixed; bottom: 2rem; right: 2rem;
+  width: 44px; height: 44px;
+  background: var(--red); border: none; cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 900;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+#back-top.visible { opacity: 1; pointer-events: auto; }
+#back-top:hover { transform: translateY(-3px); }
+#back-top img { width: 16px; height: 16px; object-fit: contain; filter: brightness(0) invert(1); }
+
+#loader {
+  position: fixed; inset: 0;
+  background: var(--black);
+  z-index: 9999;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2rem;
+  transition: opacity 0.6s var(--ease), visibility 0.6s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-logo { font-family: var(--font-display); font-size: 2.5rem; letter-spacing: 0.2em; color: var(--white); }
+.loader-logo span { color: var(--red); }
+.loader-bar-wrap { width: 240px; height: 2px; background: var(--gray-dark); overflow: hidden; }
+.loader-bar { height: 100%; background: var(--red); animation: load 1.6s ease-out forwards; }
+@keyframes load { from{width:0} to{width:100%} }
+.loader-pct { font-family: var(--font-cond); font-size: 0.75rem; letter-spacing: 0.2em; color: var(--gray-mid); }
+
+@media (max-width: 1100px) { .products-grid-full { grid-template-columns: repeat(2, 1fr); } .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; } }
+@media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } .mobile-menu { display: flex; } .products-grid-full { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; gap: 2rem; } }
+@media (max-width: 480px) { .filter-tabs { flex-wrap: wrap; } }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">APEX<span>MOTO</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-pct" id="loader-pct">LOADING... 0%</div>
+</div>
+
+<div id="progress-bar"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <img src="https://img.icons8.com/ios-filled/50/FFFFFF/up--v1.png" alt="Back to top" width="16" height="16">
+</button>
+
+<!-- NAVIGATION -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">
+        <img src="324de0b751c300f7d9ca067d395275a6.png" alt="APEX Logo" width="20" height="20">
+      </div>
+      APEX<span>MOTO</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html" class="active">Products</a></li>
+      <li><a href="technology.html">Technology</a></li>
+      <li><a href="safety.html">Safety</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><span class="divider">|</span></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+    <a href="cart.html" class="nav-cta" id="cartBtn">Cart (0)</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="technology.html">Technology</a>
+  <a href="safety.html">Safety</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+  <a href="signup.html">Sign Up</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Our Collection</div>
+    <h2 class="section-title">Peak Performance Helmets</h2>
+    <p>Each model is engineered for a specific riding style — from track-day aggression to everyday touring confidence.</p>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="container">
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-filter="all">All</button>
+    <button class="filter-tab" data-filter="sport">Sport</button>
+    <button class="filter-tab" data-filter="touring">Touring</button>
+    <button class="filter-tab" data-filter="offroad">Off-Road</button>
+  </div>
+  <div class="products-grid-full" id="productsGrid">
+    <!-- Product 1 -->
+    <div class="product-card" data-cat="sport">
+      <div class="product-img">
+        <span class="product-tag">Best Seller</span>
+        <img src="1b5b721eef5db44db12e3a8d02e0fa23.png" alt="APEX X-1 Pro Sport Helmet" width="200" height="150" loading="lazy">
+      </div>
+      <div class="product-card-inner">
+        <div class="color-swatches">
+          <div class="swatch active" style="background:#111"></div>
+          <div class="swatch" style="background:#e8001e"></div>
+          <div class="swatch" style="background:#1a3a6e"></div>
+        </div>
+        <div class="product-name">APEX X-1 Pro</div>
+        <div class="product-model">Full Face · Sport · Carbon Fiber</div>
+        <div class="product-bottom">
+          <div class="product-price">₹8490<sub>Rs</sub></div>
+          <div class="qty-selector">
+            <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
+            <input type="number" class="qty-input" value="1" min="1" readonly>
+            <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="cart-btn" onclick="addToCart(this, 'APEX X-1 Pro', 849)">Add to Cart</button>
+          <span class="cart-feedback">✓ Added!</span>
+        </div>
+      </div>
+    </div>
+    <!-- Product 2 -->
+    <div class="product-card" data-cat="touring">
+      <div class="product-img">
+        <span class="product-tag new">New</span>
+        <img src="08ac15f41f8f7019e33323dca6fb1454.png" alt="GT Tourer S Helmet" width="200" height="150" loading="lazy">
+      </div>
+      <div class="product-card-inner">
+        <div class="color-swatches">
+          <div class="swatch active" style="background:#0f1520"></div>
+          <div class="swatch" style="background:#0066ff"></div>
+          <div class="swatch" style="background:#2d2d2d"></div>
+        </div>
+        <div class="product-name">GT Tourer S</div>
+        <div class="product-model">Full Face · Touring · Polycarbonate</div>
+        <div class="product-bottom">
+          <div class="product-price">₹5490<sub>Rs</sub></div>
+          <div class="qty-selector">
+            <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
+            <input type="number" class="qty-input" value="1" min="1" readonly>
+            <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="cart-btn" onclick="addToCart(this, 'GT Tourer S', 549)">Add to Cart</button>
+          <span class="cart-feedback">✓ Added!</span>
+        </div>
+      </div>
+    </div>
+    <!-- Product 3 -->
+    <div class="product-card" data-cat="offroad">
+      <div class="product-img">
+        <img src="0010ed810b0f18c94e9b3fc08502085f.png" alt="Enduro MX-7" width="200" height="150" loading="lazy">
+      </div>
+      <div class="product-card-inner">
+        <div class="color-swatches">
+          <div class="swatch active" style="background:#2a1a0e"></div>
+          <div class="swatch" style="background:#1a2e1a"></div>
+          <div class="swatch" style="background:#111"></div>
+        </div>
+        <div class="product-name">Enduro MX-7</div>
+        <div class="product-model">Off-Road · Motocross · ABS Shell</div>
+        <div class="product-bottom">
+          <div class="product-price">₹6000<sub>Rs</sub></div>
+          <div class="qty-selector">
+            <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
+            <input type="number" class="qty-input" value="1" min="1" readonly>
+            <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="cart-btn" onclick="addToCart(this, 'Enduro MX-7', 389)">Add to Cart</button>
+          <span class="cart-feedback">✓ Added!</span>
+        </div>
+      </div>
+    </div>
+    <!-- Product 4 -->
+    <div class="product-card" data-cat="sport">
+      <div class="product-img">
+        <span class="product-tag">New</span>
+        <img src="2101e61f8f50a76e566902fe1aeec8b2.png" alt="X-2R Track" width="200" height="150" loading="lazy">
+      </div>
+      <div class="product-card-inner">
+        <div class="color-swatches">
+          <div class="swatch active" style="background:#e8001e"></div>
+          <div class="swatch" style="background:#111"></div>
+        </div>
+        <div class="product-name">X-2R Track</div>
+        <div class="product-model">Full Face · Race · Carbon-Kevlar</div>
+        <div class="product-bottom">
+          <div class="product-price">₹1,149<sub>Rs</sub></div>
+          <div class="qty-selector">
+            <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
+            <input type="number" class="qty-input" value="1" min="1" readonly>
+            <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="cart-btn" onclick="addToCart(this, 'X-2R Track', 1149)">Add to Cart</button>
+          <span class="cart-feedback">✓ Added!</span>
+        </div>
+      </div>
+    </div>
+    <!-- Product 5 -->
+    <div class="product-card" data-cat="touring">
+      <div class="product-img">
+        <img src="7513a0fa908f9ce1792f0bddb01fe87b.png" alt="ADV Explore" width="200" height="150" loading="lazy">
+      </div>
+      <div class="product-card-inner">
+        <div class="color-swatches">
+          <div class="swatch active" style="background:#1a2e1a"></div>
+          <div class="swatch" style="background:#8a8a8a"></div>
+        </div>
+        <div class="product-name">ADV Explore</div>
+        <div class="product-model">Modular · Adventure · ABS</div>
+        <div class="product-bottom">
+          <div class="product-price">₹6490<sub>Rs</sub></div>
+          <div class="qty-selector">
+            <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
+            <input type="number" class="qty-input" value="1" min="1" readonly>
+            <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="cart-btn" onclick="addToCart(this, 'ADV Explore', 649)">Add to Cart</button>
+          <span class="cart-feedback">✓ Added!</span>
+        </div>
+      </div>
+    </div>
+    <!-- Product 6 -->
+    <div class="product-card" data-cat="offroad">
+      <div class="product-img">
+        <img src="2e06bfebe7c1a8619bcbe54a6939926e.png" alt="MX Pro Lite" width="200" height="150" loading="lazy">
+      </div>
+      <div class="product-card-inner">
+        <div class="color-swatches">
+          <div class="swatch active" style="background:#0066ff"></div>
+          <div class="swatch" style="background:#e8001e"></div>
+        </div>
+        <div class="product-name">MX Pro Lite</div>
+        <div class="product-model">Off-Road · Lightweight · Carbon</div>
+        <div class="product-bottom">
+          <div class="product-price">₹5290<sub>Rs</sub></div>
+          <div class="qty-selector">
+            <button class="qty-btn" onclick="updateQty(this, -1)">−</button>
+            <input type="number" class="qty-input" value="1" min="1" readonly>
+            <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+          </div>
+          <button class="cart-btn" onclick="addToCart(this, 'MX Pro Lite', 529)">Add to Cart</button>
+          <span class="cart-feedback">✓ Added!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><img src="324de0b751c300f7d9ca067d395275a6.png" alt="APEX Logo" width="20" height="20"></div>
+        APEX<span>MOTO</span>
+      </a>
+      <p class="footer-tagline">Engineered for riders who refuse to compromise between safety and performance.</p>
+      <div class="social-links">
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/instagram-new.png" alt="Instagram" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/linkedin-circled.png" alt="Linkdin" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/youtube-play.png" alt="YouTube" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png" alt="Facebook" width="15" height="15"></a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Products</div>
+      <ul class="footer-links">
+        <li><a href="products.html">Sport Collection</a></li>
+        <li><a href="products.html">Touring Collection</a></li>
+        <li><a href="products.html">Off-Road Range</a></li>
+        <li><a href="#">Accessories</a></li>
+        <li><a href="#">Clearance</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <ul class="footer-links">
+        <li><a href="about.html">About APEX</a></li>
+        <li><a href="technology.html">Technology</a></li>
+        <li><a href="safety.html">Safety Standards</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Contact</div>
+      <div class="footer-contact">
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/marker.png" alt="Location" width="14" height="14"> 123 Velocity Drive, Los Angeles, CA 90015</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/phone.png" alt="Phone" width="14" height="14"> +1 (800) APEX-MOTO</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/email.png" alt="Email" width="14" height="14"> hello@apexmoto.com</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/clock.png" alt="Hours" width="14" height="14"> Mon–Fri 9am – 6pm PST</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 APEX MOTO. All rights reserved.</div>
+    <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Warranty</a></div>
+  </div>
+</footer>
+
+<script>
+/* ── Loader ── */
+(function() {
+  const loader = document.getElementById('loader');
+  const pct = document.getElementById('loader-pct');
+  let p = 0;
+  const interval = setInterval(() => {
+    p = Math.min(p + Math.random() * 18, 99);
+    pct.textContent = 'LOADING... ' + Math.round(p) + '%';
+  }, 120);
+  window.addEventListener('load', () => {
+    clearInterval(interval);
+    pct.textContent = 'LOADING... 100%';
+    setTimeout(() => loader.classList.add('hidden'), 400);
+  });
+  setTimeout(() => loader.classList.add('hidden'), 2200);
+})();
+
+/* ── Custom cursor ── */
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let cx = 0, cy = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px'; });
+function animRing() { rx += (cx - rx) * 0.14; ry += (cy - ry) * 0.14; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
+animRing();
+
+/* ── Progress bar & back to top ── */
+const progressBar = document.getElementById('progress-bar');
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.transform = `scaleX(${docH > 0 ? scrolled / docH : 0})`;
+  backTop.classList.toggle('visible', scrolled > 400);
+});
+
+/* ── Mobile menu ── */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
+
+/* ── Product filter ── */
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    const filter = this.dataset.filter;
+    document.querySelectorAll('.product-card').forEach(card => {
+      const show = filter === 'all' || card.dataset.cat === filter;
+      card.style.opacity = show ? '1' : '0.25';
+      card.style.pointerEvents = show ? 'auto' : 'none';
+    });
+  });
+});
+
+/* ── Cart system ── */
+let cart = JSON.parse(localStorage.getItem('apexCart') || '[]');
+
+function saveCart() { localStorage.setItem('apexCart', JSON.stringify(cart)); updateCartBtn(); }
+
+function updateCartBtn() {
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  const btn = document.getElementById('cartBtn');
+  if (btn) btn.textContent = total > 0 ? 'Cart (' + total + ')' : 'Cart (0)';
+}
+
+function updateQty(btn, delta) {
+  const input = btn.parentElement.querySelector('.qty-input');
+  let val = parseInt(input.value) + delta;
+  if (val < 1) val = 1;
+  input.value = val;
+}
+
+function addToCart(btn, name, price) {
+  const qty = parseInt(btn.parentElement.querySelector('.qty-input').value);
+  const feedback = btn.parentElement.querySelector('.cart-feedback');
+  btn.textContent = 'Adding...';
+  btn.classList.add('added');
+  const existing = cart.find(item => item.name === name);
+  if (existing) { existing.qty += qty; } else { cart.push({ name, price, qty }); }
+  saveCart();
+  setTimeout(() => {
+    btn.textContent = 'Add to Cart';
+    btn.classList.remove('added');
+    feedback.classList.add('show');
+    setTimeout(() => feedback.classList.remove('show'), 2000);
+  }, 600);
+}
+
+updateCartBtn();
+</script>
+</body>
+</html>

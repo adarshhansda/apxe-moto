@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX MOTO — Contact</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:      #0a0a0a;
+  --black2:     #111111;
+  --black3:     #1a1a1a;
+  --gray-dark:  #2a2a2a;
+  --gray-mid:   #555;
+  --gray-light: #999;
+  --gray-text:  #c8c8c8;
+  --white:      #f0f0f0;
+  --red:        #e8001e;
+  --red-glow:   rgba(232,0,30,0.25);
+  --blue:       #0066ff;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-cond:    'Barlow Condensed', sans-serif;
+  --font-body:    'Barlow', sans-serif;
+  --nav-h: 72px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--black);
+  color: var(--gray-text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+#cursor {
+  position: fixed; top: 0; left: 0;
+  width: 12px; height: 12px;
+  background: var(--red);
+  border-radius: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s var(--ease), height 0.2s var(--ease);
+}
+#cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(232,0,30,0.5);
+  border-radius: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.12s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease);
+}
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 6px; height: 6px; }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 54px; height: 54px; border-color: var(--red); }
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+img { display: block; max-width: 100%; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* NAVIGATION */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 1000;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-inner { height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; }
+.logo {
+  font-family: var(--font-display); font-size: 1.75rem;
+  letter-spacing: 0.12em; color: var(--white);
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.logo span { color: var(--red); }
+.logo-icon {
+  width: 32px; height: 32px;
+  border: 2px solid var(--red); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.logo-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-family: var(--font-cond); font-size: 0.85rem;
+  font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gray-light);
+  position: relative; transition: color 0.25s;
+  text-decoration: none;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--red);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.active { color: var(--white); }
+.nav-links a.active::after { transform: scaleX(1); }
+.nav-links .divider { color: var(--gray-dark); margin: 0; pointer-events: none; }
+
+.nav-cta {
+  font-family: var(--font-cond); font-size: 0.8rem;
+  font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; padding: 10px 22px;
+  border: 1px solid var(--red); color: var(--white);
+  background: transparent; cursor: pointer;
+  text-decoration: none;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  position: relative; overflow: hidden;
+}
+.nav-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--red); transform: translateX(-101%);
+  transition: transform 0.3s var(--ease); z-index: -1;
+}
+.nav-cta:hover::before { transform: translateX(0); }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 26px; height: 2px; background: var(--white); transition: transform 0.3s, opacity 0.3s; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
+  background: rgba(10,10,10,0.97); backdrop-filter: blur(20px);
+  z-index: 999; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.5rem; opacity: 0; pointer-events: none;
+  transition: opacity 0.35s var(--ease);
+}
+.mobile-menu.open { opacity: 1; pointer-events: auto; }
+.mobile-menu a {
+  font-family: var(--font-display); font-size: 3rem;
+  letter-spacing: 0.1em; color: var(--white);
+  transition: color 0.2s; text-decoration: none;
+}
+.mobile-menu a:hover { color: var(--red); }
+
+/* PAGE HEADER */
+.page-header {
+  padding: 8rem 0 4rem; text-align: center;
+  background: var(--black2);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.section-label {
+  font-family: var(--font-cond); font-size: 0.75rem;
+  font-weight: 600; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--red);
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1rem; justify-content: center;
+}
+.section-label::before { content: ''; width: 28px; height: 1px; background: var(--red); }
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 0.95; letter-spacing: 0.04em;
+  color: var(--white); margin-bottom: 1rem;
+}
+.page-header p { font-size: 1rem; line-height: 1.8; color: var(--gray-mid); max-width: 600px; margin: 0 auto; }
+
+/* CONTACT SECTION */
+.contact-section {
+  padding: 5rem 0; background: var(--black);
+}
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: start;
+}
+
+/* Contact Info */
+.contact-info-card {
+  background: var(--black2);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 2.5rem;
+  position: relative; overflow: hidden;
+}
+.contact-info-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--red);
+}
+.contact-info-card h3 {
+  font-family: var(--font-display); font-size: 1.8rem;
+  color: var(--white); letter-spacing: 0.04em;
+  margin-bottom: 2rem;
+}
+.contact-detail {
+  display: flex; gap: 1.25rem; margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: transform 0.3s;
+}
+.contact-detail:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.contact-detail:hover { transform: translateX(6px); }
+.contact-detail-icon {
+  width: 44px; height: 44px;
+  background: rgba(232,0,30,0.1);
+  border: 1px solid rgba(232,0,30,0.3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.3s;
+}
+.contact-detail:hover .contact-detail-icon { background: rgba(232,0,30,0.2); }
+.contact-detail-icon img {
+  width: 20px; height: 20px; object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(12%) sepia(98%) saturate(7470%) hue-rotate(350deg) brightness(95%) contrast(110%);
+}
+.contact-detail-text h4 {
+  font-family: var(--font-cond); font-size: 0.8rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--white); margin-bottom: 6px;
+}
+.contact-detail-text p { font-size: 0.9rem; color: var(--gray-mid); line-height: 1.5; }
+
+/* Contact Form */
+.contact-form-card {
+  background: var(--black2);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 2.5rem;
+  position: relative; overflow: hidden;
+}
+.contact-form-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--red);
+}
+.contact-form-card h3 {
+  font-family: var(--font-display); font-size: 1.8rem;
+  color: var(--white); letter-spacing: 0.04em;
+  margin-bottom: 2rem;
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-group label {
+  display: block;
+  font-family: var(--font-cond); font-size: 0.75rem;
+  font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gray-light);
+  margin-bottom: 0.5rem;
+}
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%; padding: 14px 16px;
+  background: var(--black3);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(232,0,30,0.1);
+}
+.form-group textarea { resize: vertical; min-height: 130px; }
+.form-group select { appearance: none; cursor: pointer; }
+.form-group select option { background: var(--black3); color: var(--white); }
+
+.btn-submit {
+  width: 100%; padding: 16px;
+  font-family: var(--font-cond); font-size: 0.9rem;
+  font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--red); color: var(--white);
+  border: none; cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+  position: relative; overflow: hidden;
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 40px var(--red-glow); background: #c5001a; }
+.btn-submit::after {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,0.15);
+  transform: translateX(-101%) skewX(-20deg);
+  transition: transform 0.45s var(--ease);
+}
+.btn-submit:hover::after { transform: translateX(120%) skewX(-20deg); }
+
+.form-success {
+  display: none; text-align: center; padding: 2rem;
+  background: rgba(0,200,83,0.1);
+  border: 1px solid rgba(0,200,83,0.3);
+  margin-top: 1rem;
+}
+.form-success.show { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.form-success h4 { color: #00c853; font-family: var(--font-cond); font-size: 1.2rem; margin-bottom: 0.5rem; }
+.form-success p { color: var(--gray-mid); font-size: 0.9rem; }
+
+/* MAP SECTION */
+.map-section {
+  padding: 0; background: var(--black2);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.map-placeholder {
+  width: 100%; height: 350px;
+  background: var(--black3);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.map-placeholder img {
+  width: 100%; height: 100%;
+  object-fit: cover; opacity: 0.5;
+}
+.map-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+}
+.map-overlay h4 {
+  font-family: var(--font-display); font-size: 2rem;
+  color: var(--white); letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+.map-overlay p { color: var(--gray-mid); font-size: 0.9rem; }
+
+/* FAQ */
+.faq-section {
+  padding: 5rem 0; background: var(--black);
+  text-align: center;
+}
+.faq-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; max-width: 900px; margin: 3rem auto 0;
+  text-align: left;
+}
+.faq-item {
+  background: var(--black2);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 1.75rem;
+  transition: border-color 0.3s;
+}
+.faq-item:hover { border-color: rgba(232,0,30,0.3); }
+.faq-item h4 {
+  font-family: var(--font-cond); font-size: 0.95rem;
+  font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--white);
+  margin-bottom: 0.75rem;
+}
+.faq-item p { font-size: 0.85rem; color: var(--gray-mid); line-height: 1.7; }
+
+/* FOOTER */
+footer {
+  background: var(--black); border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 5rem 2rem 2.5rem;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; max-width: 1280px; margin: 0 auto; }
+.footer-brand .logo { margin-bottom: 1.25rem; font-size: 1.5rem; }
+.footer-tagline { font-size: 0.85rem; line-height: 1.7; color: var(--gray-mid); max-width: 260px; margin-bottom: 1.75rem; }
+.social-links { display: flex; gap: 10px; }
+.social-link {
+  width: 36px; height: 36px; border: 1px solid var(--gray-dark);
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+.social-link:hover { border-color: var(--red); background: rgba(232,0,30,0.1); }
+.social-link img { width: 15px; height: 15px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.6; }
+.social-link:hover img { opacity: 1; }
+.footer-heading {
+  font-family: var(--font-cond); font-size: 0.72rem;
+  font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--white); margin-bottom: 1.5rem;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-links a { font-size: 0.85rem; color: var(--gray-mid); transition: color 0.2s; text-decoration: none; }
+.footer-links a:hover { color: var(--white); }
+.footer-contact { display: flex; flex-direction: column; gap: 0.7rem; }
+.contact-item { font-size: 0.82rem; color: var(--gray-mid); display: flex; align-items: flex-start; gap: 8px; }
+.contact-item img { width: 14px; height: 14px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.5; flex-shrink: 0; margin-top: 2px; }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 2rem; margin-top: 4rem;
+  max-width: 1280px; margin-left: auto; margin-right: auto;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-copy { font-size: 0.78rem; color: var(--gray-mid); }
+.footer-legal { display: flex; gap: 1.5rem; }
+.footer-legal a { font-size: 0.78rem; color: var(--gray-mid); transition: color 0.2s; text-decoration: none; }
+.footer-legal a:hover { color: var(--white); }
+
+#progress-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--red);
+  transform-origin: left; transform: scaleX(0);
+  z-index: 1001; transition: transform 0.1s linear;
+}
+#back-top {
+  position: fixed; bottom: 2rem; right: 2rem;
+  width: 44px; height: 44px;
+  background: var(--red); border: none; cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 900;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+#back-top.visible { opacity: 1; pointer-events: auto; }
+#back-top:hover { transform: translateY(-3px); }
+#back-top img { width: 16px; height: 16px; object-fit: contain; filter: brightness(0) invert(1); }
+
+#loader {
+  position: fixed; inset: 0; background: var(--black);
+  z-index: 9999; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2rem;
+  transition: opacity 0.6s var(--ease), visibility 0.6s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-logo { font-family: var(--font-display); font-size: 2.5rem; letter-spacing: 0.2em; color: var(--white); }
+.loader-logo span { color: var(--red); }
+.loader-bar-wrap { width: 240px; height: 2px; background: var(--gray-dark); overflow: hidden; }
+.loader-bar { height: 100%; background: var(--red); animation: load 1.6s ease-out forwards; }
+@keyframes load { from{width:0} to{width:100%} }
+.loader-pct { font-family: var(--font-cond); font-size: 0.75rem; letter-spacing: 0.2em; color: var(--gray-mid); }
+
+@media (max-width: 1100px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; } }
+@media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; gap: 2rem; } .faq-grid { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } .mobile-menu { display: flex; } .footer-grid { grid-template-columns: 1fr; gap: 2rem; } }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">APEX<span>MOTO</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-pct" id="loader-pct">LOADING... 0%</div>
+</div>
+
+<div id="progress-bar"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <img src="https://img.icons8.com/ios-filled/50/FFFFFF/up--v1.png" alt="Back to top" width="16" height="16">
+</button>
+
+<!-- NAVIGATION -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><img src="324de0b751c300f7d9ca067d395275a6.png" alt="APEX Logo" width="20" height="20"></div>
+      APEX<span>MOTO</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="technology.html">Technology</a></li>
+      <li><a href="safety.html">Safety</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+      <li><span class="divider">|</span></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+    <a href="products.html" class="nav-cta">Shop Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="technology.html">Technology</a>
+  <a href="safety.html">Safety</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+  <a href="signup.html">Sign Up</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div class="section-label">Get in Touch</div>
+    <h2 class="section-title">Contact Us</h2>
+    <p>Have questions about our helmets? Need sizing advice? Our team is here to help you find the perfect fit.</p>
+  </div>
+</div>
+
+<!-- CONTACT SECTION -->
+<div class="contact-section">
+  <div class="container">
+    <div class="contact-grid">
+      <!-- Contact Info -->
+      <div class="contact-info-card">
+        <h3>Reach Out</h3>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <img src="https://img.icons8.com/ios-filled/50/e8001e/marker.png" alt="Location" width="20" height="20">
+          </div>
+          <div class="contact-detail-text">
+            <h4>Visit Us</h4>
+            <p>123 Velocity Drive<br>Los Angeles, CA 90015<br>United States</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <img src="https://img.icons8.com/ios-filled/50/e8001e/phone.png" alt="Phone" width="20" height="20">
+          </div>
+          <div class="contact-detail-text">
+            <h4>Call Us</h4>
+            <p>+1 (800) APEX-MOTO<br>+1 (800) 273-9668</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <img src="https://img.icons8.com/ios-filled/50/e8001e/email.png" alt="Email" width="20" height="20">
+          </div>
+          <div class="contact-detail-text">
+            <h4>Email Us</h4>
+            <p>hello@apexmoto.com<br>support@apexmoto.com</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <img src="https://img.icons8.com/ios-filled/50/e8001e/clock.png" alt="Hours" width="20" height="20">
+          </div>
+          <div class="contact-detail-text">
+            <h4>Business Hours</h4>
+            <p>Monday – Friday: 9am – 6pm PST<br>Saturday: 10am – 4pm PST<br>Sunday: Closed</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form-card" id="contactFormCard">
+        <h3>Send a Message</h3>
+        <form id="contactForm" onsubmit="handleContactSubmit(event)">
+          <div class="form-group">
+            <label for="contact-name">Full Name *</label>
+            <input type="text" id="contact-name" placeholder="Your full name" required>
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Email Address *</label>
+            <input type="email" id="contact-email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="contact-subject">Subject *</label>
+            <select id="contact-subject" required>
+              <option value="">Select a topic</option>
+              <option value="product">Product Inquiry</option>
+              <option value="sizing">Sizing Help</option>
+              <option value="order">Order Status</option>
+              <option value="warranty">Warranty Claim</option>
+              <option value="dealer">Dealer Inquiry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Message *</label>
+            <textarea id="contact-message" placeholder="Tell us how we can help..." required></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Send Message</button>
+        </form>
+        <div class="form-success" id="formSuccess">
+          <h4>✓ Message Sent!</h4>
+          <p>Thank you for reaching out. We'll get back to you within 24 hours.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="map-section">
+  <div class="map-placeholder">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117711.79652231357!2d86.0933681503112!3d22.784165519903556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f5e31989f0e2b5%3A0xeeec8e81ce9b344!2sJamshedpur%2C%20Jharkhand!5e0!3m2!1sen!2sin!4v1777109853311!5m2!1sen!2sin" width="1400" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    
+    <!-- <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=1400&h=350&fit=crop&auto=format" alt="APEX MOTO Location Map" width="1400" height="350" loading="lazy">-->
+    <div class="map-overlay"> 
+      <!-- <h4>Visit Our HQ</h4>
+      <p>Los Angeles, California</p> -->
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="container">
+    <div class="section-label">Quick Answers</div>
+    <h2 class="section-title">Frequently Asked</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h4>What's your return policy?</h4>
+        <p>30-day no-questions-asked returns. Helmet must be unworn with all tags attached. Free return shipping within the US.</p>
+      </div>
+      <div class="faq-item">
+        <h4>How do I find my size?</h4>
+        <p>Measure your head circumference with a soft tape measure about 1 inch above your eyebrows. Check our size guide on the products page.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Do you ship internationally?</h4>
+        <p>Yes! We ship to 40+ countries. International shipping rates calculated at checkout. Duties and taxes may apply.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What warranty do you offer?</h4>
+        <p>All APEX helmets come with a 5-year manufacturer warranty against defects in materials and workmanship.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><img src="324de0b751c300f7d9ca067d395275a6.png" alt="APEX Logo" width="20" height="20"></div>
+        APEX<span>MOTO</span>
+      </a>
+      <p class="footer-tagline">Engineered for riders who refuse to compromise between safety and performance.</p>
+      <div class="social-links">
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/instagram-new.png" alt="Instagram" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/x.png" alt="X" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/youtube-play.png" alt="YouTube" width="15" height="15"></a>
+        <a href="#" class="social-link"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png" alt="Facebook" width="15" height="15"></a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Products</div>
+      <ul class="footer-links">
+        <li><a href="products.html">Sport Collection</a></li>
+        <li><a href="products.html">Touring Collection</a></li>
+        <li><a href="products.html">Off-Road Range</a></li>
+        <li><a href="#">Accessories</a></li>
+        <li><a href="#">Clearance</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <ul class="footer-links">
+        <li><a href="about.html">About APEX</a></li>
+        <li><a href="technology.html">Technology</a></li>
+        <li><a href="safety.html">Safety Standards</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Contact</div>
+      <div class="footer-contact">
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/marker.png" alt="Location" width="14" height="14"> 123 Velocity Drive, Los Angeles, CA 90015</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/phone.png" alt="Phone" width="14" height="14"> +1 (800) APEX-MOTO</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/email.png" alt="Email" width="14" height="14"> hello@apexmoto.com</div>
+        <div class="contact-item"><img src="https://img.icons8.com/ios-filled/50/e8001e/clock.png" alt="Hours" width="14" height="14"> Mon–Fri 9am – 6pm PST</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 APEX MOTO. All rights reserved.</div>
+    <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Warranty</a></div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const loader = document.getElementById('loader');
+  const pct = document.getElementById('loader-pct');
+  let p = 0;
+  const interval = setInterval(() => {
+    p = Math.min(p + Math.random() * 18, 99);
+    pct.textContent = 'LOADING... ' + Math.round(p) + '%';
+  }, 120);
+  window.addEventListener('load', () => {
+    clearInterval(interval);
+    pct.textContent = 'LOADING... 100%';
+    setTimeout(() => loader.classList.add('hidden'), 400);
+  });
+  setTimeout(() => loader.classList.add('hidden'), 2200);
+})();
+
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let cx = 0, cy = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px'; });
+function animRing() { rx += (cx - rx) * 0.14; ry += (cy - ry) * 0.14; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
+animRing();
+
+const progressBar = document.getElementById('progress-bar');
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.transform = `scaleX(${docH > 0 ? scrolled / docH : 0})`;
+  backTop.classList.toggle('visible', scrolled > 400);
+});
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
+
+function handleContactSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('contact-name').value;
+  document.getElementById('contactForm').style.display = 'none';
+  document.getElementById('formSuccess').classList.add('show');
+  setTimeout(() => {
+    document.getElementById('contactForm').style.display = 'block';
+    document.getElementById('formSuccess').classList.remove('show');
+    document.getElementById('contactForm').reset();
+  }, 4000);
+}
+</script>
+</body>
+</html>
