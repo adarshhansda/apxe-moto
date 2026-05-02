@@ -1,4 +1,4 @@
-﻿    (function () {
+    (function () {
       const loader = document.getElementById('loader');
       const pct = document.getElementById('loader-pct');
       let p = 0;
@@ -34,14 +34,44 @@
     const mobileMenu = document.getElementById('mobileMenu');
     hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
 
-    function handleContactSubmit(e) {
+    async function handleContactSubmit(e) {
       e.preventDefault();
-      const name = document.getElementById('contact-name').value;
-      document.getElementById('contactForm').style.display = 'none';
-      document.getElementById('formSuccess').classList.add('show');
-      setTimeout(() => {
-        document.getElementById('contactForm').style.display = 'block';
-        document.getElementById('formSuccess').classList.remove('show');
-        document.getElementById('contactForm').reset();
-      }, 4000);
+      const form = e.target;
+      const formData = new FormData(form);
+      const submitBtn = form.querySelector('.btn-submit');
+      const originalBtnText = submitBtn.textContent;
+
+      submitBtn.textContent = 'Sending...';
+      submitBtn.disabled = true;
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          form.style.display = 'none';
+          document.getElementById('formSuccess').classList.add('show');
+          setTimeout(() => {
+            form.style.display = 'block';
+            document.getElementById('formSuccess').classList.remove('show');
+            form.reset();
+            submitBtn.textContent = originalBtnText;
+            submitBtn.disabled = false;
+          }, 4000);
+        } else {
+          alert('Something went wrong. Please try again.');
+          submitBtn.textContent = originalBtnText;
+          submitBtn.disabled = false;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error sending your message.');
+        submitBtn.textContent = originalBtnText;
+        submitBtn.disabled = false;
+      }
     }

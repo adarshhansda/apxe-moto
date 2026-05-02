@@ -104,7 +104,7 @@
             </div>
             <div class="contact-detail-text">
               <h4>Email Us</h4>
-              <p>adarshhansda3@.com<br>support@apexmoto.com</p>
+              <p>adarshhansda3@gmail.com<br>support@apexmoto.com</p>
             </div>
           </div>
           <div class="contact-detail">
@@ -121,18 +121,19 @@
         <!-- Contact Form -->
         <div class="contact-form-card" id="contactFormCard">
           <h3>Send a Message</h3>
-          <form id="contactForm" onsubmit="handleContactSubmit(event)">
+          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" onsubmit="handleContactSubmit(event)">
+            <input type="hidden" name="access_key" value="92e5fe4b-b0bb-411f-bf40-acee3e772055">
             <div class="form-group">
               <label for="contact-name">Full Name *</label>
-              <input type="text" id="contact-name" placeholder="Your full name" required>
+              <input type="text" id="contact-name" name="name" placeholder="Your full name" required>
             </div>
             <div class="form-group">
               <label for="contact-email">Email Address *</label>
-              <input type="email" id="contact-email" placeholder="your@email.com" required>
+              <input type="email" id="contact-email" name="email" placeholder="your@email.com" required>
             </div>
             <div class="form-group">
               <label for="contact-subject">Subject *</label>
-              <select id="contact-subject" required>
+              <select id="contact-subject" name="subject" required>
                 <option value="">Select a topic</option>
                 <option value="product">Product Inquiry</option>
                 <option value="sizing">Sizing Help</option>
@@ -144,7 +145,7 @@
             </div>
             <div class="form-group">
               <label for="contact-message">Message *</label>
-              <textarea id="contact-message" placeholder="Tell us how we can help..." required></textarea>
+              <textarea id="contact-message" name="message" placeholder="Tell us how we can help..." required></textarea>
             </div>
             <button type="submit" class="btn-submit">Send Message</button>
           </form>
