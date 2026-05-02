@@ -1,616 +1,166 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APEX MOTO — Sign Up</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --black:      #0a0a0a;
-  --black2:     #111111;
-  --black3:     #1a1a1a;
-  --gray-dark:  #2a2a2a;
-  --gray-mid:   #555;
-  --gray-light: #999;
-  --gray-text:  #c8c8c8;
-  --white:      #f0f0f0;
-  --red:        #e8001e;
-  --red-glow:   rgba(232,0,30,0.25);
-  --blue:       #0066ff;
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-cond:    'Barlow Condensed', sans-serif;
-  --font-body:    'Barlow', sans-serif;
-  --nav-h: 72px;
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-html { scroll-behavior: smooth; font-size: 16px; }
-
-body {
-  background: var(--black);
-  color: var(--gray-text);
-  font-family: var(--font-body);
-  font-weight: 300;
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  overflow-x: hidden;
-  cursor: none;
-}
-
-#cursor {
-  position: fixed; top: 0; left: 0;
-  width: 12px; height: 12px;
-  background: var(--red);
-  border-radius: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s var(--ease), height 0.2s var(--ease);
-}
-#cursor-ring {
-  position: fixed; top: 0; left: 0;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(232,0,30,0.5);
-  border-radius: 100%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: transform 0.12s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease);
-}
-body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 6px; height: 6px; }
-body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 54px; height: 54px; border-color: var(--red); }
-
-.container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
-
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.025;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* NAVIGATION */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: var(--nav-h);
-  z-index: 1000;
-  background: rgba(10,10,10,0.92);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.nav-inner { height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; }
-.logo {
-  font-family: var(--font-display); font-size: 1.75rem;
-  letter-spacing: 0.12em; color: var(--white);
-  display: flex; align-items: center; gap: 10px;
-  text-decoration: none;
-}
-.logo span { color: var(--red); }
-.logo-icon {
-  width: 32px; height: 32px;
-  border: 2px solid var(--red); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-.logo-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
-.nav-links a {
-  font-family: var(--font-cond); font-size: 0.85rem;
-  font-weight: 600; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--gray-light);
-  position: relative; transition: color 0.25s;
-  text-decoration: none;
-}
-.nav-links a::after {
-  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-  height: 1px; background: var(--red);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform 0.3s var(--ease);
-}
-.nav-links a:hover { color: var(--white); }
-.nav-links a:hover::after { transform: scaleX(1); }
-.nav-links a.active { color: var(--white); }
-.nav-links a.active::after { transform: scaleX(1); }
-.nav-links .divider { color: var(--gray-dark); margin: 0; pointer-events: none; }
-
-.nav-cta {
-  font-family: var(--font-cond); font-size: 0.8rem;
-  font-weight: 700; letter-spacing: 0.16em;
-  text-transform: uppercase; padding: 10px 22px;
-  border: 1px solid var(--red); color: var(--white);
-  background: transparent; cursor: pointer;
-  text-decoration: none;
-  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
-  position: relative; overflow: hidden;
-}
-.nav-cta::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--red); transform: translateX(-101%);
-  transition: transform 0.3s var(--ease); z-index: -1;
-}
-.nav-cta:hover::before { transform: translateX(0); }
-
-.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-.hamburger span { display: block; width: 26px; height: 2px; background: var(--white); transition: transform 0.3s, opacity 0.3s; }
-.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity: 0; }
-.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-.mobile-menu {
-  display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
-  background: rgba(10,10,10,0.97); backdrop-filter: blur(20px);
-  z-index: 999; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2.5rem; opacity: 0; pointer-events: none;
-  transition: opacity 0.35s var(--ease);
-}
-.mobile-menu.open { opacity: 1; pointer-events: auto; }
-.mobile-menu a {
-  font-family: var(--font-display); font-size: 3rem;
-  letter-spacing: 0.1em; color: var(--white);
-  transition: color 0.2s; text-decoration: none;
-}
-.mobile-menu a:hover { color: var(--red); }
-
-/* AUTH PAGE */
-.auth-page {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  padding-top: calc(var(--nav-h) + 2rem);
-  padding-bottom: 3rem;
-}
-.auth-container {
-  background: var(--black2);
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 3rem; width: 100%; max-width: 480px;
-  position: relative; overflow: hidden;
-}
-.auth-container::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--red), transparent);
-}
-.auth-logo {
-  text-align: center; margin-bottom: 2rem;
-}
-.auth-logo span {
-  font-family: var(--font-display); font-size: 1.5rem;
-  letter-spacing: 0.1em; color: var(--white);
-}
-.auth-logo span strong { color: var(--red); }
-
-.auth-container h2 {
-  font-family: var(--font-display); font-size: 2.5rem;
-  color: var(--white); letter-spacing: 0.06em;
-  margin-bottom: 0.5rem; text-align: center;
-}
-.auth-container .auth-subtitle {
-  color: var(--gray-mid); margin-bottom: 2rem;
-  font-size: 0.9rem; text-align: center;
-}
-
-/* Benefits */
-.benefits {
-  display: flex; gap: 1rem; margin-bottom: 2rem;
-  padding: 1.25rem;
-  background: rgba(232,0,30,0.05);
-  border: 1px solid rgba(232,0,30,0.15);
-}
-.benefit-item {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 0.72rem; color: var(--gray-light);
-  font-family: var(--font-cond);
-  letter-spacing: 0.04em;
-}
-.benefit-item svg {
-  width: 16px; height: 16px;
-  fill: var(--red); flex-shrink: 0;
-}
-
-.form-group { margin-bottom: 1.5rem; }
-.form-group label {
-  display: block;
-  font-family: var(--font-cond); font-size: 0.75rem;
-  font-weight: 600; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--gray-light);
-  margin-bottom: 0.5rem;
-}
-.form-group input {
-  width: 100%; padding: 14px 16px;
-  background: var(--black3);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--white);
-  font-family: var(--font-body); font-size: 0.95rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  outline: none;
-}
-.form-group input:focus {
-  border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(232,0,30,0.1);
-}
-.form-group input::placeholder { color: var(--gray-mid); }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-.password-field { position: relative; }
-.toggle-password {
-  position: absolute; right: 14px; top: 50%;
-  transform: translateY(-50%);
-  background: none; border: none;
-  color: var(--gray-mid); cursor: pointer;
-  font-size: 0.8rem; padding: 4px;
-  font-family: var(--font-cond);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.toggle-password:hover { color: var(--white); }
-
-.password-strength {
-  margin-top: 0.5rem; display: flex; gap: 4px;
-}
-.strength-bar {
-  flex: 1; height: 3px;
-  background: var(--gray-dark);
-  border-radius: 2px;
-  transition: background 0.3s;
-}
-.strength-bar.weak { background: var(--red); }
-.strength-bar.medium { background: #ff6b00; }
-.strength-bar.strong { background: #00c853; }
-.strength-text {
-  font-size: 0.7rem; color: var(--gray-mid);
-  margin-top: 4px; text-align: right;
-}
-
-.form-checkbox {
-  display: flex; align-items: flex-start; gap: 8px;
-  cursor: pointer; color: var(--gray-mid);
-  font-size: 0.82rem; line-height: 1.5;
-  margin-bottom: 1.5rem;
-}
-.form-checkbox input {
-  width: 16px; height: 16px;
-  accent-color: var(--red);
-  cursor: pointer; margin-top: 2px;
-  flex-shrink: 0;
-}
-.form-checkbox a {
-  color: var(--red); text-decoration: none;
-  transition: color 0.2s;
-}
-.form-checkbox a:hover { color: var(--white); text-decoration: underline; }
-
-.btn-block {
-  width: 100%; padding: 16px;
-  font-family: var(--font-cond); font-size: 0.9rem;
-  font-weight: 700; letter-spacing: 0.18em;
-  text-transform: uppercase;
-  background: var(--red); color: var(--white);
-  border: none; cursor: pointer;
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-  transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
-  position: relative; overflow: hidden;
-}
-.btn-block:hover { transform: translateY(-2px); box-shadow: 0 8px 40px var(--red-glow); background: #c5001a; }
-.btn-block::after {
-  content: ''; position: absolute; inset: 0;
-  background: rgba(255,255,255,0.15);
-  transform: translateX(-101%) skewX(-20deg);
-  transition: transform 0.45s var(--ease);
-}
-.btn-block:hover::after { transform: translateX(120%) skewX(-20deg); }
-
-.divider {
-  display: flex; align-items: center; gap: 1rem;
-  margin: 2rem 0;
-}
-.divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
-.divider-text {
-  font-size: 0.75rem; color: var(--gray-mid);
-  text-transform: uppercase; letter-spacing: 0.1em;
-  font-family: var(--font-cond);
-}
-
-.social-login {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 1rem; margin-bottom: 2rem;
-}
-.social-btn {
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px; padding: 12px;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: var(--gray-text);
-  font-family: var(--font-cond); font-size: 0.8rem;
-  font-weight: 600; letter-spacing: 0.08em;
-  cursor: pointer;
-  transition: background 0.25s, border-color 0.25s, color 0.25s;
-}
-.social-btn:hover {
-  background: rgba(255,255,255,0.03);
-  border-color: rgba(255,255,255,0.25);
-  color: var(--white);
-}
-.social-btn img { width: 18px; height: 18px; object-fit: contain; }
-
-.auth-footer {
-  text-align: center; margin-top: 1.5rem;
-  font-size: 0.85rem; color: var(--gray-mid);
-}
-.auth-footer a {
-  color: var(--red); text-decoration: none;
-  font-weight: 500; transition: color 0.2s;
-}
-.auth-footer a:hover { color: var(--white); }
-
-.error-message {
-  background: rgba(232,0,30,0.1);
-  border: 1px solid rgba(232,0,30,0.3);
-  color: var(--red); padding: 10px 14px;
-  font-size: 0.8rem; margin-bottom: 1.5rem;
-  display: none; text-align: center;
-}
-.error-message.show { display: block; }
-
-/* FOOTER */
-footer {
-  background: var(--black);
-  border-top: 1px solid rgba(255,255,255,0.06);
-  padding: 2rem; text-align: center;
-}
-.footer-copy { font-size: 0.78rem; color: var(--gray-mid); }
-.footer-copy a { color: var(--red); text-decoration: none; }
-.footer-copy a:hover { color: var(--white); }
-
-#loader {
-  position: fixed; inset: 0; background: var(--black);
-  z-index: 9999; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 2rem;
-  transition: opacity 0.6s var(--ease), visibility 0.6s;
-}
-#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-logo { font-family: var(--font-display); font-size: 2.5rem; letter-spacing: 0.2em; color: var(--white); }
-.loader-logo span { color: var(--red); }
-.loader-bar-wrap { width: 240px; height: 2px; background: var(--gray-dark); overflow: hidden; }
-.loader-bar { height: 100%; background: var(--red); animation: load 1.6s ease-out forwards; }
-@keyframes load { from{width:0} to{width:100%} }
-.loader-pct { font-family: var(--font-cond); font-size: 0.75rem; letter-spacing: 0.2em; color: var(--gray-mid); }
-
-@media (max-width: 768px) { .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } .mobile-menu { display: flex; } .auth-container { padding: 2rem; } .form-row { grid-template-columns: 1fr; } .benefits { flex-direction: column; gap: 0.75rem; } }
-@media (max-width: 480px) { .social-login { grid-template-columns: 1fr; } }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APEX MOTO â€” Sign Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/signup.css">
 </head>
+
 <body>
 
-<div id="loader">
-  <div class="loader-logo">APEX<span>MOTO</span></div>
-  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
-  <div class="loader-pct" id="loader-pct">LOADING... 0%</div>
-</div>
-
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
-<!-- NAVIGATION -->
-<nav id="navbar">
-  <div class="container nav-inner">
-    <a href="index.html" class="logo">
-      <div class="logo-icon"><img src="324de0b751c300f7d9ca067d395275a6.png" alt="APEX Logo" width="20" height="20"></div>
-      APEX<span>MOTO</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="products.html">Products</a></li>
-      <li><a href="technology.html">Technology</a></li>
-      <li><a href="safety.html">Safety</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><span class="divider">|</span></li>
-      <li><a href="login.html">Login</a></li>
-      <li><a href="signup.html" class="active">Sign Up</a></li>
-    </ul>
-    <a href="products.html" class="nav-cta">Shop Now</a>
-    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  <div id="loader">
+    <div class="loader-logo">APEX<span>MOTO</span></div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar"></div>
+    </div>
+    <div class="loader-pct" id="loader-pct">LOADING... 0%</div>
   </div>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a>
-  <a href="products.html">Products</a>
-  <a href="technology.html">Technology</a>
-  <a href="safety.html">Safety</a>
-  <a href="about.html">About</a>
-  <a href="contact.html">Contact</a>
-  <a href="login.html">Login</a>
-  <a href="signup.html">Sign Up</a>
-  <a href="cart.html">Cart</a>
-</div>
 
-<!-- SIGNUP FORM -->
-<div class="auth-page">
-  <div class="auth-container">
-    <div class="auth-logo">
-      <span>APEX<strong>MOTO</strong></span>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- NAVIGATION -->
+  <nav id="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><img src="images\logo.png" alt="APEX Logo" width="20" height="20"></div>
+        APEX<span>MOTO</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="technology.html">Technology</a></li>
+        <li><a href="safety.html">Safety</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><span class="divider">|</span></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="signup.html" class="active">Sign Up</a></li>
+      </ul>
+      <a href="products.html" class="nav-cta">Shop Now</a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
     </div>
-    <h2>Create Account</h2>
-    <p class="auth-subtitle">Join the APEX MOTO family</p>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="technology.html">Technology</a>
+    <a href="safety.html">Safety</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Login</a>
+    <a href="signup.html">Sign Up</a>
+    <a href="cart.html">Cart</a>
+  </div>
 
-    <div class="benefits">
-      <div class="benefit-item">
-        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        Faster checkout
+  <!-- SIGNUP FORM -->
+  <div class="auth-page">
+    <div class="auth-container">
+      <div class="auth-logo">
+        <span>APEX<strong>MOTO</strong></span>
       </div>
-      <div class="benefit-item">
-        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        Track orders
-      </div>
-      <div class="benefit-item">
-        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        Exclusive deals
-      </div>
-    </div>
+      <h2>Create Account</h2>
+      <p class="auth-subtitle">Join the APEX MOTO family</p>
 
-    <div class="error-message" id="errorMessage"></div>
+      <div class="benefits">
+        <div class="benefit-item">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+          Faster checkout
+        </div>
+        <div class="benefit-item">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+          Track orders
+        </div>
+        <div class="benefit-item">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+          Exclusive deals
+        </div>
+      </div>
 
-    <form id="signupForm" onsubmit="handleSignup(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="signup-first">First Name</label>
-          <input type="text" id="signup-first" placeholder="John" required>
+      <div class="error-message" id="errorMessage"></div>
+
+      <form id="signupForm" onsubmit="handleSignup(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="signup-first">First Name</label>
+            <input type="text" id="signup-first" placeholder="John" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-last">Last Name</label>
+            <input type="text" id="signup-last" placeholder="Doe" required>
+          </div>
         </div>
         <div class="form-group">
-          <label for="signup-last">Last Name</label>
-          <input type="text" id="signup-last" placeholder="Doe" required>
+          <label for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" placeholder="your@email.com" required>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="signup-email">Email Address</label>
-        <input type="email" id="signup-email" placeholder="your@email.com" required>
-      </div>
-      <div class="form-group">
-        <label for="signup-password">Password</label>
-        <div class="password-field">
-          <input type="password" id="signup-password" placeholder="Min 8 characters" minlength="8" required oninput="checkPasswordStrength()">
-          <button type="button" class="toggle-password" onclick="togglePassword('signup-password', this)">Show</button>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <div class="password-field">
+            <input type="password" id="signup-password" placeholder="Min 8 characters" minlength="8" required
+              oninput="checkPasswordStrength()">
+            <button type="button" class="toggle-password"
+              onclick="togglePassword('signup-password', this)">Show</button>
+          </div>
+          <div class="password-strength">
+            <div class="strength-bar" id="strength1"></div>
+            <div class="strength-bar" id="strength2"></div>
+            <div class="strength-bar" id="strength3"></div>
+            <div class="strength-bar" id="strength4"></div>
+          </div>
+          <div class="strength-text" id="strengthText">Password strength</div>
         </div>
-        <div class="password-strength">
-          <div class="strength-bar" id="strength1"></div>
-          <div class="strength-bar" id="strength2"></div>
-          <div class="strength-bar" id="strength3"></div>
-          <div class="strength-bar" id="strength4"></div>
+        <div class="form-group">
+          <label for="signup-confirm">Confirm Password</label>
+          <input type="password" id="signup-confirm" placeholder="Re-enter password" required>
         </div>
-        <div class="strength-text" id="strengthText">Password strength</div>
+        <label class="form-checkbox">
+          <input type="checkbox" id="termsCheck" required>
+          I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I consent to receive
+          marketing emails from APEX MOTO.
+        </label>
+        <button type="submit" class="btn-block">Create Account</button>
+      </form>
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">or sign up with</span>
+        <div class="divider-line"></div>
       </div>
-      <div class="form-group">
-        <label for="signup-confirm">Confirm Password</label>
-        <input type="password" id="signup-confirm" placeholder="Re-enter password" required>
+
+      <div class="social-login">
+        <button class="social-btn" onclick="alert('Google Sign-Up demo')">
+          <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google" width="18" height="18"> Google
+        </button>
+        <button class="social-btn" onclick="alert('Apple Sign-Up demo')">
+          <img src="https://img.icons8.com/ios-filled/50/FFFFFF/mac-os.png" alt="Apple" width="18" height="18"> Apple
+        </button>
       </div>
-      <label class="form-checkbox">
-        <input type="checkbox" id="termsCheck" required>
-        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I consent to receive marketing emails from APEX MOTO.
-      </label>
-      <button type="submit" class="btn-block">Create Account</button>
-    </form>
 
-    <div class="divider">
-      <div class="divider-line"></div>
-      <span class="divider-text">or sign up with</span>
-      <div class="divider-line"></div>
-    </div>
-
-    <div class="social-login">
-      <button class="social-btn" onclick="alert('Google Sign-Up demo')">
-        <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google" width="18" height="18"> Google
-      </button>
-      <button class="social-btn" onclick="alert('Apple Sign-Up demo')">
-        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/mac-os.png" alt="Apple" width="18" height="18"> Apple
-      </button>
-    </div>
-
-    <div class="auth-footer">
-      Already have an account? <a href="login.html">Sign In</a>
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Sign In</a>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-copy">© 2025 APEX MOTO. All rights reserved. <a href="index.html">Back to Home</a></div>
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-copy">Â© 2025 APEX MOTO. All rights reserved. <a href="index.html">Back to Home</a></div>
+  </footer>
 
-<script>
-(function() {
-  const loader = document.getElementById('loader');
-  const pct = document.getElementById('loader-pct');
-  let p = 0;
-  const interval = setInterval(() => {
-    p = Math.min(p + Math.random() * 18, 99);
-    pct.textContent = 'LOADING... ' + Math.round(p) + '%';
-  }, 120);
-  window.addEventListener('load', () => {
-    clearInterval(interval);
-    pct.textContent = 'LOADING... 100%';
-    setTimeout(() => loader.classList.add('hidden'), 400);
-  });
-  setTimeout(() => loader.classList.add('hidden'), 2200);
-})();
-
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let cx = 0, cy = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px'; });
-function animRing() { rx += (cx - rx) * 0.14; ry += (cy - ry) * 0.14; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
-animRing();
-
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobileMenu');
-hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
-
-function togglePassword(inputId, btn) {
-  const input = document.getElementById(inputId);
-  if (input.type === 'password') { input.type = 'text'; btn.textContent = 'Hide'; }
-  else { input.type = 'password'; btn.textContent = 'Show'; }
-}
-
-function checkPasswordStrength() {
-  const password = document.getElementById('signup-password').value;
-  const bars = [
-    document.getElementById('strength1'),
-    document.getElementById('strength2'),
-    document.getElementById('strength3'),
-    document.getElementById('strength4')
-  ];
-  const strengthText = document.getElementById('strengthText');
-  
-  bars.forEach(bar => { bar.className = 'strength-bar'; });
-  
-  let strength = 0;
-  if (password.length >= 6) strength++;
-  if (password.length >= 8) strength++;
-  if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
-  if (/[0-9]/.test(password) || /[!@#$%^&*]/.test(password)) strength++;
-  
-  const levels = ['weak', 'weak', 'medium', 'strong'];
-  
-  for (let i = 0; i < strength; i++) {
-    bars[i].classList.add(levels[strength - 1]);
-  }
-  
-  if (strength === 0) strengthText.textContent = 'Password strength';
-  else if (strength <= 2) strengthText.textContent = 'Weak password';
-  else if (strength === 3) strengthText.textContent = 'Medium password';
-  else strengthText.textContent = 'Strong password!';
-}
-
-function handleSignup(e) {
-  e.preventDefault();
-  const firstName = document.getElementById('signup-first').value;
-  const email = document.getElementById('signup-email').value;
-  const password = document.getElementById('signup-password').value;
-  const confirm = document.getElementById('signup-confirm').value;
-  const errorMsg = document.getElementById('errorMessage');
-  
-  errorMsg.classList.remove('show');
-  
-  if (password !== confirm) {
-    errorMsg.textContent = '❌ Passwords do not match. Please try again.';
-    errorMsg.classList.add('show');
-    return;
-  }
-  
-  if (password.length < 8) {
-    errorMsg.textContent = '❌ Password must be at least 8 characters.';
-    errorMsg.classList.add('show');
-    return;
-  }
-  
-  alert('📝 Demo Mode: Account created!\nWelcome to APEX MOTO, ' + firstName + '!\n\nThis is a demo website. No real account is created.');
-  window.location.href = 'index.html';
-}
-</script>
+  <script src="js/signup.js"></script>
 </body>
+
 </html>
